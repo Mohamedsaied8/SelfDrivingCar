@@ -8,8 +8,9 @@
 
  char count=0;
  char buf[200]="hello client";
-  char recv_buf[200];
-   int recv_len;
+ char recv_buf[200];
+ int recv_len;
+
 int main(int argc , char *argv[])
 {
     WSADATA wsa;
@@ -34,30 +35,15 @@ int main(int argc , char *argv[])
     {
         printf("Could not create socket : %d" , WSAGetLastError());
     }
-#ifdef UDP
-    //Create a socket
-    if((s = socket(AF_INET , SOCK_STREAM , IPPROTO_UDP )) == INVALID_SOCKET)
-    {
-        printf("Could not create socket : %d" , WSAGetLastError());
-    }
 
-    printf("Socket created.\n");
-
-
-    //Prepare the sockaddr_in structure
-    client.sin_family = AF_INET;
-    client.sin_addr.s_addr = inet_addr("192.168.1.101");;
-    client.sin_port = htons( 5000 );
-#endif
     //Prepare the sockaddr_in structure
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY; //bind with machine address,local address
-    server.sin_port = htons( 1000 );
+    server.sin_port = htons( 8888 );
 
-#ifndef UDP
 
     //Bind
-    if( bind(s ,(struct sockaddr *)&server , sizeof(server)) == SOCKET_ERROR)
+    if(bind(s ,(struct sockaddr *)&server , sizeof(server)) == SOCKET_ERROR)
     {
         printf("Bind failed with error code : %d" , WSAGetLastError());
     }
@@ -65,11 +51,10 @@ int main(int argc , char *argv[])
     puts("Bind done");
 
     //Listen to incoming connections
-    listen(s , 3);
-#endif
+    listen(s , 30);
+
     printf("waiting for connection becoming available");
 
-#ifndef UDP
 while(1){
       if( (new_socket = accept(s , (struct sockaddr *)&client,&c))!= INVALID_SOCKET)
       {
@@ -80,37 +65,19 @@ while(1){
            //if we want to receive from ESP
            recv(new_socket,recv_buf, BUFLEN,0);
            puts(recv_buf);
-           if (send(new_socket, buf, strlen(buf),0) == -1)
+          /* if (send(new_socket, buf, strlen(buf),0) == -1)
             {
                //   puts("Failed to send");
-            }
+            }*/
+         //  closesocket(new_socket);
+
       }
 
-/*
-      if (new_socket == INVALID_SOCKET)
-          {
-              printf("accept failed with error code : %d" , WSAGetLastError());
-              return 1;
-          }*/
 
-
-
-#endif
-
-
-#ifdef UDP
-    if (sendto(new_socket, buf, 2, 0, (struct sockaddr*) &client, sizeof(client)) == -1)
-     {
-           puts("Failed to send");
-     }
-     puts(buf);
-     recv_len=sizeof(client);
-     recvfrom(new_socket,recv_buf, BUFLEN,0, (struct sockaddr *) &client, &recv_len);
-#endif
 
 
    //wait for a second
-    //Sleep(1000);
+  // Sleep(1000);
 }
  closesocket(s);
  WSACleanup();
