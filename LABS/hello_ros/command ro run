@@ -1,0 +1,7 @@
+
+>>rosrun package_name executable_name
+
+rosrun final hello
+
+>>to run master
+roscore

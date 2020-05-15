@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+ <package>
+   <name>final</name>
+   <version>0.0.1</version>
+   <description>
+  Example create package in ROS
+ </description>
+ <maintainer email="mohamed.saied@amitgroup.net">
+  Mohamed Saied
+ </maintainer>
+ <license>GPL</license>
+ <buildtool_depend>catkin</buildtool_depend>
+ <build_depend>roscpp</build_depend>
+ <run_depend>roscpp</run_depend>
+</package>
