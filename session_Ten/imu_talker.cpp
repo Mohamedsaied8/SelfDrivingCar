@@ -78,6 +78,8 @@ int main(int argc, char **argv)
     imu.linear_acceleration.y = acc_gyro.raw.acc_y * SENSORS_GRAVITY_STANDARD;
     imu.linear_acceleration.z = acc_gyro.raw.acc_z * SENSORS_GRAVITY_STANDARD;
 
+
+
     chatter_pub.publish(imu);
 
     ros::spinOnce();
