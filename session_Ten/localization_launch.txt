@@ -1,0 +1,34 @@
+<launch>
+
+<rosparam command="load" file="$(find symeter2)/config/ekf_config.yaml" />
+
+<!-- Launch Symeter 2 gui-->
+<node pkg="symeter2_gui" type="symeter2_gui" name="symeter2_gui" output="screen" />
+
+<!-- Launch the robot_localization node -->
+<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_odom" clear_params="true">
+    <rosparam param="initial_state">[0.0,  0.0,  0.0,
+                             0.0,  0.0,  0.0,
+                             0.0,  0.0,  0.0,
+                             0.0,  0.0,  0.0,
+                             0.0,  0.0,  0.0]</rosparam>
+
+</node>
+
+<node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true">
+    <remap from="odometry/filtered" to="odometry/filtered_map"/>
+</node>
+
+<node pkg="robot_localization" type="navsat_transform_node" 
+    name="navsat_transform" respawn="true" output="log">
+
+    <rosparam param="datum">[49.9, 8.9, 0.0, map, base_link]</rosparam>
+
+    <remap from="/imu/data" to="/symeter2/imu0" />
+    <remap from="/gps/fix" to="/symeter2/fix/" />
+    <remap from="/odometry/filtered" to="/odometry/filtered" />
+
+
+</node>
+
+   </launch>
